@@ -1,11 +1,22 @@
 const express = require('express');
+const bodyParser = require("body-parser");
+const MongoClient = require("mongodb").MongoClient;
+
 const app = express();
 const port = 3000;
+let db;
 
-console.log("zmiana");
 
-app.listen(port, () => {
-    console.log(`Server is up and running on port ${port}`);
+app.use(bodyParser.urlencoded({encode: true, extended: true}));
+
+MongoClient.connect('mongodb://haniarudy:ainah@ds149030.mlab.com:49030/book', (err, res) => {
+    if(err) {
+        return console.log(err);
+    }
+    db = res;
+    app.listen(port, () => {
+        console.log(`Server is up and running on port ${port}`);
+    });
 });
 
 app.get('/', (req, res) => {
