@@ -1,3 +1,5 @@
+//Use template engine to generate html with ajax data
+
 const express = require('express');
 const bodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
@@ -10,8 +12,10 @@ let db;
 
 app.use(bodyParser.urlencoded({encode: true, extended: true}));
 
+app.set("view engine", "ejs");
+
 MongoClient.connect('mongodb://haniarudy:ainah@ds149030.mlab.com:49030/book', (err, res) => {
-    if(err) {
+    if (err) {
         return console.log(err);
     }
     db = res;
@@ -21,8 +25,9 @@ MongoClient.connect('mongodb://haniarudy:ainah@ds149030.mlab.com:49030/book', (e
 });
 
 app.get('/', (req, res) => {
-    console.log(__dirname);
-    res.sendFile(__dirname + '/index.html')
+    db.collection("book").find().toArray((err, result) => {
+        res.render('index.ejs', {titles: result});
+    });
 });
 
 app.post('/titles', (req, res) => {
@@ -32,11 +37,11 @@ app.post('/titles', (req, res) => {
 
     db.collection('book')
         .save(book, (err, result) => {
-        if (err) {
-            return console.error(err)
-        }
+            if (err) {
+                return console.error(err)
+            }
 
-        console.info("Saved to database");
-        res.redirect("/")
-    })
- });
+            console.info("Saved to database");
+            res.redirect("/")
+        })
+});
