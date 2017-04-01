@@ -25,5 +25,14 @@ app.get('/', (req, res) => {
 });
 
 app.post('/titles', (req, res) => {
+    db.collection('book')
+        .save(req.body, (err, result) => {
+        if (err) {
+            return console.error(err)
+        }
+
+        console.info("Saved to database");
+        res.redirect("/")
+    })
   console.log('Wait for titles');
 });
