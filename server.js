@@ -66,3 +66,14 @@ app.put('/titles', (req, res) => {
         res.send(response);
     })
 });
+
+app.delete('/titles', (req, res) => {
+    db.collection('book').findOneAndDelete({
+        title: req.body.title
+    }, (err, result) => {
+        if (err) {
+            return res.send(err);
+        }
+        res.send(result);
+    })
+});
